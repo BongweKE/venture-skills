@@ -155,4 +155,4 @@ re-deploy.
 
 MIT for everything in `skills/`, `bin/`, `scripts/` and `tests/`. Curated
 third-party skills remain under their own upstream licences — see
-[`CREDITS.md`](CREDITS.md).
+[`CREDITS.md`](CREDITS.md) and [`NOTICE.md`](NOTICE.md).
