@@ -11,8 +11,16 @@ import { fileURLToPath } from "node:url";
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const CLI = join(REPO, "bin/venture-skills.mjs");
 
-function run(args) {
-  return execFileSync("node", [CLI, ...args], { encoding: "utf8" });
+function run(args, { allowFailure = false } = {}) {
+  try {
+    return execFileSync("node", [CLI, ...args], { encoding: "utf8" });
+  } catch (e) {
+    // doctor exits non-zero when a runtime cannot see every skill, which is the
+    // expected state on a machine that has not run `install` yet. The output is
+    // still the thing under test.
+    if (allowFailure && typeof e.stdout === "string") return e.stdout;
+    throw e;
+  }
 }
 
 test("list --json returns the full skill set with suites", () => {
@@ -58,7 +66,7 @@ test("get prints skill markdown to stdout", () => {
 });
 
 test("doctor reports every runtime", () => {
-  const out = run(["doctor"]);
+  const out = run(["doctor"], { allowFailure: true });
   for (const rt of ["hermes", "opencode", "antigravity", "vibe"]) {
     assert.match(out, new RegExp(rt), `doctor should mention ${rt}`);
   }
