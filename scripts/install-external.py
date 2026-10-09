@@ -221,7 +221,38 @@ def deploy(installed: list[str], dry: bool) -> dict:
         AG_PLUGIN_DIR.mkdir(parents=True, exist_ok=True)
         (AG_PLUGIN_DIR / "plugin.json").write_text(
             json.dumps(AG_PLUGIN_JSON, indent=2) + "\n", encoding="utf-8")
+        register_antigravity_plugin()
     return counts
+
+
+def register_antigravity_plugin() -> None:
+    """Declare the plugin in Antigravity's import manifest.
+
+    A plugin directory that is not registered is not loaded, so writing
+    plugin.json alone is not enough. Mirrors what deploy.py does for the
+    authored suite.
+    """
+    manifest = AG_PLUGIN_DIR.parent.parent / "import_manifest.json"
+    if not manifest.is_file():
+        print(f"  ! no import_manifest.json at {manifest} — plugin not registered")
+        return
+    try:
+        data = json.loads(manifest.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        print(f"  ! unreadable import_manifest.json at {manifest} — plugin not registered")
+        return
+    imports = data.setdefault("imports", [])
+    name = AG_PLUGIN_JSON["name"]
+    if any(i.get("name") == name for i in imports):
+        return
+    imports.append({
+        "name": name,
+        "source": "local-install",
+        "importedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "components": ["installed"],
+    })
+    manifest.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    print(f"  registered {name} in {manifest}")
 
 
 def write_manifest(installed: list[str]) -> None:
