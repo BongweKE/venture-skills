@@ -14,3 +14,12 @@ npm-debug.log*
 # Local engagement context. Never commit a real venture's positioning,
 # pricing, buyer detail or customer names.
 .agents/
+
+# Generated snapshot of THIS machine's full skill corpus. Never publish it: the
+# list reveals private projects and tooling. The committed, publishable subset
+# lives in catalog/known-skills.public.txt.
+catalog/known-skills.local.txt
+
+# Locally declared private skill-name prefixes. Gitignored for the same reason:
+# naming the projects in a public file would disclose them.
+catalog/.private-prefixes

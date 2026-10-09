@@ -5,7 +5,9 @@ HOW. This map records the handoff points so a stage skill never re-teaches craft
 that already has a better home.
 
 Every skill named here is present in the live corpus of the four runtimes. The
-authoritative machine-readable list is `catalog/known-skills.txt`.
+machine-readable list of cross-link targets is `catalog/known-skills.public.txt`
+(committed) merged with `catalog/known-skills.local.txt` (generated locally,
+gitignored — it is a snapshot of one machine and is never published).
 
 ## UI and UX
 

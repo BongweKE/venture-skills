@@ -127,7 +127,7 @@ covers the plain copy case.
 skills/           21 authored skills (the product)
 bin/              the CLI, zero dependencies
 registry/         curated third-party sources + generated attribution
-catalog/          the cross-link registry of every installed skill name
+catalog/          the cross-link registry (public allowlist + local snapshot)
 scripts/          validate, deploy, install-external, gen-known-skills, gen-credits
 tests/            format, CLI and registry contracts
 docs/             architecture and the linking model

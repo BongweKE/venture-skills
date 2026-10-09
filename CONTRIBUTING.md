@@ -27,7 +27,8 @@ Full rules are in [`AGENTS.md`](AGENTS.md). The short version:
 - Every `(references/...)` and `(templates/...)` link must resolve to a file
   that exists in the skill directory.
 - Every name in `metadata.related-skills` must resolve either to a skill in this
-  repository or to a name in `catalog/known-skills.txt`.
+  repository or to a name in `catalog/known-skills.public.txt` (or the locally
+  generated `known-skills.local.txt`, which is never committed).
 - No raw emoji. The validator rejects them; use text or describe the icon.
 
 ## What makes a good skill here

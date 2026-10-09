@@ -21,12 +21,16 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repoSkills = new Set(
   readdirSync(join(REPO, "skills")).filter((n) => statSync(join(REPO, "skills", n)).isDirectory())
 );
-const knownSkills = new Set(
-  readFileSync(join(REPO, "catalog/known-skills.txt"), "utf8")
-    .split("\n")
-    .map((l) => l.trim())
-    .filter((l) => l && !l.startsWith("#"))
-);
+// Public allowlist (committed) merged with the local snapshot (gitignored).
+const knownSkills = new Set();
+for (const f of ["catalog/known-skills.public.txt", "catalog/known-skills.local.txt"]) {
+  const p = join(REPO, f);
+  if (!existsSync(p)) continue;
+  for (const line of readFileSync(p, "utf8").split("\n")) {
+    const l = line.trim();
+    if (l && !l.startsWith("#")) knownSkills.add(l);
+  }
+}
 
 // Tokens that look like skill names but are not.
 const NOT_SKILLS = new Set([

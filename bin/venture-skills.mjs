@@ -276,8 +276,10 @@ function cmdDoctor() {
     console.log(`  ${n.padEnd(12)} ${mark} ${C.dim}${rt.path}${C.off}`);
     if (found !== skills.length) bad++;
   }
-  if (!existsSync(join(REPO, "catalog/known-skills.txt"))) {
-    console.log(`  ${C.dim}catalog/known-skills.txt missing - run scripts/gen-known-skills.py${C.off}`);
+  if (!existsSync(join(REPO, "catalog/known-skills.public.txt"))) {
+    console.log(
+      `  ${C.dim}catalog/known-skills.public.txt missing - run scripts/gen-known-skills.py --public${C.off}`
+    );
   }
   return bad ? 1 : 0;
 }

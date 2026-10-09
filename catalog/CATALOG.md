@@ -9,13 +9,16 @@ Three sources:
 - **repo** — authored here (`skills/`). The business-development layer and the
   business-to-app bridge it owns.
 - **installed** — skills already present in your agents across Hermes, OpenCode,
-  Antigravity and Vibe. Generated into [`known-skills.txt`](known-skills.txt).
+  Antigravity and Vibe. The publishable subset this repo cross-references is
+  committed as [`known-skills.public.txt`](known-skills.public.txt); the full
+  snapshot of a machine's corpus stays local in `known-skills.local.txt`, which
+  is gitignored and never published.
 - **curated** — third-party skill sets vetted in
   [`../registry/sources.json`](../registry/sources.json), installed on demand by
   [`../scripts/install-external.py`](../scripts/install-external.py), credited in
   [`../CREDITS.md`](../CREDITS.md).
 
-Every skill name below is checked against `known-skills.txt` by
+Every skill name below is checked against the cross-link registry by
 `tests/catalog.test.mjs`. Do not cite a skill that is not installed; a catalog
 that points at skills you do not have is worse than no catalog.
 
@@ -197,12 +200,13 @@ feature moved the KPI it was justified by.
 
 ## Maintaining this catalog
 
-1. `python3 scripts/gen-known-skills.py` — refresh `known-skills.txt` from the
-   agents' live corpora after installing or removing skills.
+1. `python3 scripts/gen-known-skills.py` — refresh the local corpus snapshot
+   (`catalog/known-skills.local.txt`, gitignored) after installing or removing
+   skills. Run it with `--public` to refresh the committed allowlist.
 2. Update the stage tables when a new repo skill lands.
 3. `npm test` — `tests/catalog.test.mjs` fails if this file cites a skill that is
-   not installed, or if it points at a `known-skills.txt` entry that has since
-   disappeared.
+   not installed, or if it points at a cross-link name that has since
+   disappeared from the registry.
 4. `python3 scripts/validate.py` — every `related-skills` entry must resolve in
-   this repo or in `known-skills.txt`.
+   this repo or in the cross-link registry.
 5. `python3 scripts/deploy.py` — install into the four runtimes.

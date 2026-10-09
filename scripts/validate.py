@@ -20,18 +20,29 @@ except ImportError:  # pragma: no cover
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
-KNOWN_FILE = ROOT / "catalog" / "known-skills.txt"
+CATALOG = ROOT / "catalog"
+# Committed allowlist of public skill names this repo cross-references.
+KNOWN_PUBLIC = CATALOG / "known-skills.public.txt"
+# Generated snapshot of this machine's full corpus. Gitignored: it reveals the
+# author's private projects, so it is never published.
+KNOWN_LOCAL = CATALOG / "known-skills.local.txt"
 
 
 def _load_known_external() -> set[str]:
-    """Names of skills already installed across the runtimes (cross-link targets)."""
-    if not KNOWN_FILE.is_file():
-        return set()
-    out = set()
-    for line in KNOWN_FILE.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if line and not line.startswith("#"):
-            out.add(line)
+    """Cross-link targets: public allowlist merged with the local snapshot.
+
+    The public file is always present, so a fresh clone and CI validate the same
+    way. The local file is merged when it exists, which is what lets a developer
+    machine cross-reference every skill it actually has installed.
+    """
+    out: set[str] = set()
+    for path in (KNOWN_PUBLIC, KNOWN_LOCAL):
+        if not path.is_file():
+            continue
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line and not line.startswith("#"):
+                out.add(line)
     return out
 
 
@@ -128,7 +139,7 @@ def validate_skill(skill_dir: Path, all_names: set[str], errors: list[str]) -> N
         related = [related]
     for r in related:
         if r not in all_names and r not in KNOWN_EXTERNAL:
-            fail(errors, name, f"related-skill unresolved (not in repo or catalog/known-skills.txt): {r}")
+            fail(errors, name, f"related-skill unresolved (not in repo or cross-link registry): {r}")
 
     # structure sanity (warnings, not hard failures)
     for req in ("## Before Starting", "## When to Use", "## Common Pitfalls"):

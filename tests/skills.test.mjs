@@ -15,20 +15,31 @@ import { parseFrontmatter } from "../bin/venture-skills.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SKILLS = join(REPO, "skills");
-const KNOWN = join(REPO, "catalog/known-skills.txt");
+
+/**
+ * Cross-link targets: the committed public allowlist, plus the author's local
+ * corpus snapshot when it exists (gitignored - it is never published).
+ */
+function loadKnown() {
+  const names = new Set();
+  for (const f of ["catalog/known-skills.public.txt", "catalog/known-skills.local.txt"]) {
+    const p = join(REPO, f);
+    if (!existsSync(p)) continue;
+    for (const line of readFileSync(p, "utf8").split("\n")) {
+      const l = line.trim();
+      if (l && !l.startsWith("#")) names.add(l);
+    }
+  }
+  return names;
+}
+
+const dirs = readdirSync(SKILLS).filter((n) => statSync(join(SKILLS, n)).isDirectory());
+const names = new Set(dirs);
+const known = loadKnown();
 
 const NAME_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const PORTABLE = new Set(["name", "description", "license", "compatibility", "metadata"]);
 const EMOJI_RE = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F0FF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{FE0F}]/u;
-
-const dirs = readdirSync(SKILLS).filter((n) => statSync(join(SKILLS, n)).isDirectory());
-const names = new Set(dirs);
-const known = new Set(
-  readFileSync(KNOWN, "utf8")
-    .split("\n")
-    .map((l) => l.trim())
-    .filter((l) => l && !l.startsWith("#"))
-);
 
 test("skills directory is not empty", () => {
   assert.ok(dirs.length >= 20, `expected at least 20 skills, found ${dirs.length}`);
@@ -104,7 +115,7 @@ for (const name of dirs) {
     for (const r of list) {
       assert.ok(
         names.has(r) || known.has(r),
-        `related-skill does not resolve in-repo or in catalog/known-skills.txt: ${r}`
+        `related-skill does not resolve in-repo or in the cross-link registry: ${r}`
       );
     }
   });

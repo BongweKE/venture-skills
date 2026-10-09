@@ -98,10 +98,12 @@ a judgement about a specific feature, not a property a linter can read.
    providing a single arbitration point.
 2. **The corpus map** (`references/corpus-map.md`). Stage to HOW-skill. This
    solves the restatement problem by making the handoff explicit.
-3. **The catalog** (`catalog/known-skills.txt`). The generated list of every
-   skill name installed across the four runtimes. The validator uses it to check
-   that a cross-reference resolves, so a skill cannot point at a corpus skill
-   that does not exist.
+3. **The catalog** (`catalog/known-skills.public.txt`, merged locally with
+   `known-skills.local.txt`). The generated list of cross-linkable skill names
+   across the four runtimes. The validator uses it to check that a
+   cross-reference resolves, so a skill cannot point at a corpus skill that does
+   not exist. Only the public allowlist is committed; the full snapshot of a
+   machine's corpus is gitignored because it reveals private projects.
 
 ## Both directions
 

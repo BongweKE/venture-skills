@@ -31,8 +31,9 @@ First public release.
   `get`, `registry`, `install`, `doctor`.
 - **Deploy tooling** for all four runtimes, with drift detection: `scripts/deploy.py`
   and `scripts/install-external.py`.
-- **Catalog registry** (`catalog/known-skills.txt`) generated from the live
-  corpora, used to validate cross-references between skills.
+- **Cross-link registry** (`catalog/known-skills.public.txt`) — the committed
+  allowlist of public skill names the skills cross-reference, merged on a
+  developer machine with a locally generated, gitignored corpus snapshot.
 - **Tests**: 184 assertions covering skill format, CLI behaviour and registry
   integrity, plus a Python validator and a GitHub Actions workflow.
 

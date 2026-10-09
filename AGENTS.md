@@ -50,12 +50,13 @@ venture-skills/
 │   └── installed.json        # GENERATED — do not hand-edit
 ├── catalog/
 │   ├── CATALOG.md            # the cross-link map of the corpus
-│   └── known-skills.txt      # GENERATED — installed skill names
+│   ├── known-skills.public.txt  # COMMITTED allowlist of public cross-link targets
+│   └── known-skills.local.txt   # GENERATED, gitignored — this machine's corpus
 ├── scripts/
 │   ├── validate.py           # authoring spec validator (the gate)
 │   ├── deploy.py             # installs skills/ into the four runtimes
 │   ├── install-external.py   # vendors curated third-party skills
-│   ├── gen-known-skills.py   # regenerates catalog/known-skills.txt
+│   ├── gen-known-skills.py   # regenerates the cross-link registries
 │   └── gen-credits.mjs       # regenerates CREDITS.md + registry/installed.json
 ├── tests/                    # format, CLI and registry contracts
 └── docs/                     # architecture, linking model
@@ -77,8 +78,10 @@ venture-skills/
 9. Every `references/…` and `templates/…` link in `SKILL.md` resolves to a file
    that exists in the skill directory.
 10. Every skill name in `metadata.related-skills` resolves **either** to a skill
-    in this repo **or** to a name in `catalog/known-skills.txt`. The second
-    option is how a skill cross-references the user's wider installed corpus.
+    in this repo **or** to a name in `catalog/known-skills.public.txt` / a
+    locally generated `catalog/known-skills.local.txt`. The second option is how
+    a skill cross-references the user's wider installed corpus. Never commit the
+    local file: it is a snapshot of one machine and reveals private projects.
 11. Quote any `description` containing a colon followed by a space — unquoted
     `key: value: value` is a YAML error.
 
