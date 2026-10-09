@@ -1,0 +1,48 @@
+{
+  "name": "venture-skills",
+  "version": "1.0.0",
+  "description": "Business, product and engineering skills for AI coding agents: author software as if it were led by market research, business needs, SOPs, system design and security.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "venture-skills": "bin/venture-skills.mjs"
+  },
+  "files": [
+    "bin/",
+    "skills/",
+    "registry/",
+    "catalog/",
+    "CREDITS.md",
+    "README.md",
+    "LICENSE",
+    "AGENTS.md"
+  ],
+  "scripts": {
+    "list": "node bin/venture-skills.mjs list",
+    "doctor": "node bin/venture-skills.mjs doctor",
+    "install:skills": "node bin/venture-skills.mjs install",
+    "validate": "python3 scripts/validate.py",
+    "test": "node --test tests/*.test.mjs",
+    "credits": "node scripts/gen-credits.mjs",
+    "catalog": "python3 scripts/gen-known-skills.py",
+    "check": "npm run validate && npm run test && node bin/venture-skills.mjs doctor"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "agent-skills",
+    "skills",
+    "ai-agents",
+    "business-development",
+    "product-management",
+    "system-design",
+    "claude-code",
+    "codex",
+    "opencode",
+    "hermes"
+  ]
+}

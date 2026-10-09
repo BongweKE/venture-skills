@@ -1,2 +1,16 @@
-*.pyc
+# Build and tooling artefacts
 __pycache__/
+*.pyc
+
+# Third-party clones staged by scripts/install-external.py.
+# Redistributed skills carry their own licence; we vendor them at install time
+# rather than committing other people's trees into this repository.
+vendor/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Local engagement context. Never commit a real venture's positioning,
+# pricing, buyer detail or customer names.
+.agents/

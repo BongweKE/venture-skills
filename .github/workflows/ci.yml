@@ -1,0 +1,52 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: validate, test, doctor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validator dependency
+        run: python -m pip install --quiet pyyaml
+
+      - name: Validate every skill against the authoring spec
+        run: python3 scripts/validate.py
+
+      - name: Skill format, CLI and registry contracts
+        run: node --test tests/*.test.mjs
+
+      - name: Attribution is in sync with the registry
+        run: node scripts/gen-credits.mjs --check
+
+      - name: Catalog is in sync with the installed corpora
+        # Informational on CI: the corpora of the four runtimes are not present
+        # on a clean runner, so this only reports, it does not fail the build.
+        continue-on-error: true
+        run: python3 scripts/gen-known-skills.py --check
+
+      - name: Install into the four runtimes
+        run: node bin/venture-skills.mjs install
+
+      - name: Every runtime can see every skill
+        run: node bin/venture-skills.mjs doctor
+
+      - name: Package contents are correct
+        run: npm pack --dry-run

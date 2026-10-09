@@ -1,26 +1,46 @@
 # Versions
 
-Suite-level changelog. The shared `x.y.z` number follows: **x** = restructure,
-**y** = new skill added, **z** = update to an existing skill. Per-skill versions
-live in each `SKILL.md` under `metadata.version`.
+Suite-level changes are recorded in [`CHANGELOG.md`](CHANGELOG.md). This file
+exists only to define the versioning scheme and to hold the per-skill version
+table, so there is a single changelog to maintain.
 
-## 1.0.0
+## Scheme
 
-Initial release of the business-development suite — 13 skills:
+The suite version is a single `x.y.z`:
 
-- `bd-context` — foundation document `.agents/bd-context.md`
-- `market-segmentation` — ICP, TAM/SAM/SOM, segment prioritisation, frameworks
-- `competitive-intelligence` — teardowns and battlecards
-- `value-proposition-and-pricing` — positioning, ROI business case, packaging/pricing
-- `prospect-research` — verified, scored target lists
-- `outbound-sequencing` — multi-touch cadences and copy
-- `discovery-call` — call prep, MEDDPICC, follow-up
-- `proposal-and-quote` — proposals, SOWs, quotes
-- `objection-handling` — objection library and negotiation planning
-- `pipeline-forecast` — stage gates, CRM hygiene, forecast model
-- `account-planning` — strategic account plans and expansion
-- `qbr-and-renewal` — QBRs, renewals, churn saves
-- `win-loss-review` — post-decision debriefs and pattern synthesis
+- **x** — restructure: a skill added or removed, or the chain reordered.
+- **y** — a new capability inside an existing skill that changes its routing or
+  its output artifact.
+- **z** — an edit that corrects or clarifies without changing routing or output.
 
-Tooling: `scripts/validate.py` (open-standard validator), `deploy.py` (installs
-the suite into Hermes, OpenCode, Antigravity CLI, and Mistral Vibe).
+Per-skill versions live in each `SKILL.md` under `metadata.version` and follow the
+same logic for that skill alone. The suite version is what a runtime reports; the
+per-skill version is what a contributor bumps in a pull request.
+
+## Current
+
+Suite version: **1.0.0**
+
+| Suite | Skill | Version |
+|---|---|---|
+| business-development | `venture-skills-root` | 1.0.0 |
+| business-development | `bd-context` | 1.0.0 |
+| business-development | `market-segmentation` | 1.0.0 |
+| business-development | `competitive-intelligence` | 1.0.0 |
+| business-development | `value-proposition-and-pricing` | 1.0.0 |
+| business-development | `prospect-research` | 1.0.0 |
+| business-development | `outbound-sequencing` | 1.0.0 |
+| business-development | `discovery-call` | 1.0.0 |
+| business-development | `objection-handling` | 1.0.0 |
+| business-development | `proposal-and-quote` | 1.0.0 |
+| business-development | `account-planning` | 1.0.0 |
+| business-development | `pipeline-forecast` | 1.0.0 |
+| business-development | `qbr-and-renewal` | 1.0.0 |
+| business-development | `win-loss-review` | 1.0.0 |
+| business-to-app | `product-discovery` | 1.0.0 |
+| business-to-app | `business-need-to-prd` | 1.0.0 |
+| business-to-app | `prd-to-system-design` | 1.0.0 |
+| business-to-app | `security-by-design` | 1.0.0 |
+| business-to-app | `feature-traceability` | 1.0.0 |
+| business-to-app | `sop-to-automation` | 1.0.0 |
+| business-to-app | `launch-readiness` | 1.0.0 |

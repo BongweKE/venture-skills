@@ -20,6 +20,22 @@ except ImportError:  # pragma: no cover
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
+KNOWN_FILE = ROOT / "catalog" / "known-skills.txt"
+
+
+def _load_known_external() -> set[str]:
+    """Names of skills already installed across the runtimes (cross-link targets)."""
+    if not KNOWN_FILE.is_file():
+        return set()
+    out = set()
+    for line in KNOWN_FILE.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            out.add(line)
+    return out
+
+
+KNOWN_EXTERNAL = _load_known_external()
 
 NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 PORTABLE_FIELDS = {"name", "description", "license", "compatibility", "metadata"}
@@ -105,14 +121,14 @@ def validate_skill(skill_dir: Path, all_names: set[str], errors: list[str]) -> N
         if not (skill_dir / rel).is_file():
             fail(errors, name, f"broken reference link: {rel}")
 
-    # 10. related-skills resolve in-repo
+    # 10. related-skills resolve in-repo or against the installed-corpus registry
     meta = fm.get("metadata") or {}
     related = meta.get("related-skills") or []
     if isinstance(related, str):
         related = [related]
     for r in related:
-        if r not in all_names:
-            fail(errors, name, f"related-skill not in repo: {r}")
+        if r not in all_names and r not in KNOWN_EXTERNAL:
+            fail(errors, name, f"related-skill unresolved (not in repo or catalog/known-skills.txt): {r}")
 
     # structure sanity (warnings, not hard failures)
     for req in ("## Before Starting", "## When to Use", "## Common Pitfalls"):
